@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator HQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080810;
+      --surface: #0f0f1a;
+      --surface2: #16162a;
+      --border: rgba(255,255,255,0.07);
+      --purple: #9333ea;
+      --pink: #ec4899;
+      --cyan: #22d3ee;
+      --green: #22c55e;
+      --yellow: #facc15;
+      --red: #f43f5e;
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --subtle: #1e1e35;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ─────────────────────────────────── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 32px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .logo-text span { background: linear-gradient(90deg, var(--purple), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .header-clock {
+      text-align: center;
+    }
+    #live-time {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #fff, var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    #live-date {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .header-greeting {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: right;
+    }
+    .header-greeting strong { color: var(--text); display: block; font-size: 15px; }
+
+    /* ── MAIN LAYOUT ─────────────────────────────── */
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      grid-template-rows: auto auto auto;
+      gap: 20px;
+      padding: 24px 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ── CARDS ──────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+    }
+
+    /* ── WEATHER ────────────────────────────────── */
+    .weather-card { grid-column: 1; }
+
+    .city-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .city-tab {
+      padding: 7px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .city-tab.active {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border-color: transparent;
+      color: white;
+    }
+
+    .weather-body {
+      display: none;
+      gap: 20px;
+      align-items: center;
+    }
+    .weather-body.active { display: flex; }
+
+    .weather-icon-wrap {
+      font-size: 72px;
+      line-height: 1;
+      min-width: 80px;
+      text-align: center;
+    }
+    .weather-main { flex: 1; }
+    .weather-temp {
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+    .weather-desc { font-size: 16px; color: var(--muted); margin-top: 4px; text-transform: capitalize; }
+    .weather-city-name { font-size: 13px; color: var(--cyan); font-weight: 600; margin-top: 2px; }
+
+    .weather-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .wstat {
+      background: var(--subtle);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .wstat strong { display: block; font-size: 15px; color: var(--text); font-weight: 700; margin-bottom: 2px; }
+
+    .weather-loading, .weather-error {
+      color: var(--muted);
+      font-size: 14px;
+      padding: 20px 0;
+    }
+
+    /* ── SOCIAL LINKS ───────────────────────────── */
+    .socials-card { grid-column: 1; }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .social-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      text-decoration: none;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .social-btn:hover { transform: translateY(-3px); border-color: transparent; }
+    .social-btn .icon { font-size: 32px; }
+    .social-btn.youtube:hover  { background: linear-gradient(135deg, #ff0000, #cc0000); box-shadow: 0 8px 24px rgba(255,0,0,0.3); }
+    .social-btn.tiktok:hover   { background: linear-gradient(135deg, #010101, #69c9d0); box-shadow: 0 8px 24px rgba(105,201,208,0.3); }
+    .social-btn.twitter:hover  { background: linear-gradient(135deg, #000, #1a1a1a); box-shadow: 0 8px 24px rgba(255,255,255,0.1); }
+    .social-btn.instagram:hover { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); box-shadow: 0 8px 24px rgba(253,29,29,0.3); }
+
+    .social-label { font-size: 12px; }
+
+    /* ── CONTENT IDEAS ──────────────────────────── */
+    .content-card {
+      grid-column: 1;
+      background: linear-gradient(135deg, rgba(147,51,234,0.08), rgba(236,72,153,0.05));
+      border-color: rgba(147,51,234,0.2);
+    }
+
+    .day-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+
+    .content-focus {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .content-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+
+    .tasks-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--subtle);
+      border-radius: 12px;
+      padding: 13px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .task-item:hover { background: rgba(147,51,234,0.15); }
+    .task-item.done { opacity: 0.45; }
+    .task-item.done .task-text { text-decoration: line-through; }
+
+    .task-check {
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      border: 2px solid rgba(255,255,255,0.15);
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+    .task-item.done .task-check {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border-color: transparent;
+    }
+
+    .task-text { font-size: 14px; font-weight: 500; flex: 1; }
+    .task-platform {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 100px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .platform-yt  { background: rgba(255,0,0,0.2); color: #ff6b6b; }
+    .platform-tt  { background: rgba(105,201,208,0.2); color: #69c9d0; }
+    .platform-tw  { background: rgba(255,255,255,0.1); color: #aaa; }
+    .platform-ig  { background: rgba(253,29,29,0.15); color: #fcb045; }
+    .platform-all { background: rgba(147,51,234,0.2); color: #c084fc; }
+
+    .reset-btn {
+      margin-top: 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .reset-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+    /* ── TWITTER SIDEBAR ────────────────────────── */
+    .twitter-sidebar {
+      grid-column: 2;
+      grid-row: 1 / 5;
+    }
+
+    .twitter-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .news-source-select {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .news-tab {
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .news-tab.active {
+      background: #000;
+      border-color: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    .twitter-feed-container {
+      flex: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      min-height: 600px;
+      background: #000;
+      position: relative;
+    }
+
+    .twitter-feed-container iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 700px;
+      border: none;
+    }
+
+    .feed-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TIME CUES ──────────────────────────────── */
+    .cues-card { grid-column: 1; }
+
+    .cue-cal-strip {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .cue-cal-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--subtle);
+      min-width: 58px;
+      cursor: pointer;
+      transition: all 0.2s;
+      gap: 3px;
+    }
+    .cue-cal-day:hover { border-color: var(--purple); }
+    .cue-cal-day.cal-today {
+      background: linear-gradient(135deg, rgba(147,51,234,0.2), rgba(236,72,153,0.12));
+      border-color: var(--purple);
+    }
+    .cue-cal-day.cal-selected {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border-color: transparent;
+    }
+    .cue-cal-dayname { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
+    .cue-cal-day.cal-selected .cue-cal-dayname,
+    .cue-cal-day.cal-selected .cue-cal-date,
+    .cue-cal-day.cal-selected .cue-cal-badge { color: white; }
+    .cue-cal-date { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.1; }
+    .cue-cal-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 100px; }
+    .badge-gaming { background: rgba(34,211,238,0.15); color: var(--cyan); }
+    .badge-nogame { background: rgba(244,63,94,0.15); color: var(--red); }
+    .cue-cal-day.cal-selected .cue-cal-badge { background: rgba(255,255,255,0.25); color: white; }
+
+    .cue-live-bar {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 10px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 600;
+    }
+    .cue-live-bar.visible { display: flex; }
+    .live-pulse {
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: pulse 1.5s infinite;
+    }
+
+    .cue-mode-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+    .cue-mode-btn {
+      padding: 7px 16px; border-radius: 100px; font-size: 13px; font-weight: 600;
+      border: 1px solid var(--border); background: transparent; color: var(--muted);
+      cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .cue-mode-btn.active { background: linear-gradient(135deg, var(--purple), var(--pink)); border-color: transparent; color: white; }
+
+    .cue-timeline { display: flex; flex-direction: column; gap: 0; }
+    .cue-row { display: flex; align-items: stretch; gap: 0; }
+    .cue-left { display: flex; flex-direction: column; align-items: center; width: 72px; flex-shrink: 0; }
+    .cue-clock { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; padding-top: 14px; letter-spacing: -0.3px; transition: color 0.3s; }
+    .cue-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid; flex-shrink: 0; margin-top: 6px; background: var(--bg); transition: all 0.4s; }
+    .cue-connector { width: 2px; flex: 1; min-height: 16px; opacity: 0.25; }
+    .cue-right { flex: 1; padding: 10px 0 16px 12px; }
+    .cue-card-inner { background: var(--subtle); border-radius: 12px; padding: 12px 14px; border: 1px solid var(--border); transition: all 0.4s; }
+
+    /* ACTIVE — purple/pink flash */
+    @keyframes segFlash {
+      0%,100% { border-color: rgba(147,51,234,0.4); background: rgba(147,51,234,0.1); box-shadow: none; }
+      50% { border-color: rgba(236,72,153,0.95); background: rgba(236,72,153,0.18); box-shadow: 0 0 24px rgba(147,51,234,0.4); }
+    }
+    .cue-row.is-active .cue-card-inner { animation: segFlash 2.5s ease-in-out infinite; }
+    .cue-row.is-active .cue-dot { background: var(--purple) !important; box-shadow: 0 0 12px var(--purple); }
+    .cue-row.is-active .cue-clock { color: var(--purple); }
+
+    /* WARNING — yellow flash (ending soon) */
+    @keyframes warnFlash {
+      0%,100% { border-color: rgba(250,204,21,0.4); background: rgba(250,204,21,0.08); box-shadow: none; }
+      50% { border-color: rgba(250,204,21,1); background: rgba(250,204,21,0.18); box-shadow: 0 0 18px rgba(250,204,21,0.35); }
+    }
+    .cue-row.is-warning .cue-card-inner { animation: warnFlash 1.2s ease-in-out infinite; }
+    .cue-row.is-warning .cue-dot { background: var(--yellow) !important; box-shadow: 0 0 10px var(--yellow); }
+    .cue-row.is-warning .cue-clock { color: var(--yellow); }
+
+    /* PAST — faded */
+    .cue-row.is-past .cue-card-inner { opacity: 0.28; }
+    .cue-row.is-past .cue-clock { color: var(--muted); }
+
+    .cue-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+    .cue-seg-name { font-size: 14px; font-weight: 700; }
+    .cue-dur-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; flex-shrink: 0; }
+    .cue-start-note { font-size: 12px; color: var(--muted); margin-bottom: 7px; }
+    .cue-alert { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 7px; display: inline-block; }
+    .cue-end-row { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; background: var(--subtle); border-radius: 10px; padding: 10px 14px; border: 1px solid var(--border); }
+    .cue-end-label { font-size: 13px; font-weight: 600; color: var(--muted); }
+    .cue-end-time { font-size: 14px; font-weight: 800; color: var(--green); }
+    .cue-no-stream { text-align: center; padding: 32px 16px; color: var(--muted); font-size: 14px; }
+    .cue-no-stream strong { display: block; font-size: 17px; color: var(--text); margin-bottom: 6px; }
+
+    /* ── ANALYTICS ──────────────────────────────── */
+    .analytics-card { grid-column: 1; }
+
+    .analytics-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .analytics-source {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .analytics-source a { color: var(--cyan); text-decoration: none; font-weight: 600; }
+    .analytics-source a:hover { text-decoration: underline; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-box {
+      background: var(--subtle);
+      border-radius: 12px;
+      padding: 14px 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat-icon { font-size: 20px; margin-bottom: 6px; }
+    .stat-value { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; margin-bottom: 3px; }
+    .stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
+    .stat-change { font-size: 10px; font-weight: 700; margin-top: 4px; }
+    .up { color: var(--green); }
+    .down { color: var(--red); }
+    .neutral { color: var(--muted); }
+
+    .analytics-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .analytics-panel {
+      background: var(--subtle);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid var(--border);
+    }
+    .analytics-panel-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .peak-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .peak-bar-label { font-size: 11px; color: var(--muted); width: 60px; flex-shrink: 0; }
+    .peak-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .peak-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+    .peak-bar-val { font-size: 11px; font-weight: 700; color: var(--text); min-width: 36px; text-align: right; }
+
+    .game-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+    .game-name { font-weight: 600; }
+    .game-mins { color: var(--muted); font-size: 11px; }
+    .game-viewers { font-weight: 700; color: var(--cyan); font-size: 12px; }
+
+    /* AI Coach */
+    .coach-section {
+      background: linear-gradient(135deg, rgba(147,51,234,0.1), rgba(236,72,153,0.06));
+      border: 1px solid rgba(147,51,234,0.25);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 4px;
+    }
+    .coach-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .coach-avatar {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .coach-title { font-size: 14px; font-weight: 700; }
+    .coach-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+    .coach-input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .coach-input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 13px;
+      color: var(--text);
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .coach-input:focus { border-color: var(--purple); }
+    .coach-input::placeholder { color: var(--muted); }
+    .coach-send-btn {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none;
+      border-radius: 10px;
+      padding: 9px 16px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    .coach-send-btn:hover { opacity: 0.85; }
+    .coach-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .coach-msgs {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+    .coach-msg {
+      padding: 10px 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .coach-msg.user {
+      background: rgba(147,51,234,0.15);
+      border: 1px solid rgba(147,51,234,0.25);
+      color: var(--text);
+      align-self: flex-end;
+      max-width: 85%;
+    }
+    .coach-msg.bot {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .coach-msg.typing {
+      color: var(--muted);
+      font-style: italic;
+    }
+    .coach-quick-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .coach-quick {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 100px;
+      border: 1px solid rgba(147,51,234,0.35);
+      background: rgba(147,51,234,0.1);
+      color: #c084fc;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .coach-quick:hover { background: rgba(147,51,234,0.25); }
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+      .twitter-sidebar { grid-column: 1; grid-row: auto; }
+      .twitter-feed-container { min-height: 500px; }
+      header { flex-wrap: wrap; gap: 12px; }
+    }
+
+    /* ── PULSE DOT ──────────────────────────────── */
+    .live-dot {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--subtle); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🎬</div>
+    <div class="logo-text"><span>Creator</span> HQ</div>
+  </div>
+
+  <div class="header-clock">
+    <div id="live-time">00:00:00</div>
+    <div id="live-date">Loading...</div>
+  </div>
+
+  <div class="header-greeting">
+    <strong>Welcome back, Nytrsa 👋</strong>
+    <span id="greeting-msg">Let's make content</span>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN GRID ═══════════════ -->
+<div class="main">
+
+  <!-- ── WEATHER ── -->
+  <div class="card weather-card">
+    <div class="card-title">
+      <span class="live-dot"></span> Live Weather
+    </div>
+
+    <div class="city-tabs">
+      <button class="city-tab active" onclick="switchCity('lehigh')">📍 Lehigh Acres, FL</button>
+      <button class="city-tab" onclick="switchCity('atlanta')">✈️ Atlanta, GA</button>
+    </div>
+
+    <div class="weather-body active" id="weather-lehigh">
+      <div class="weather-loading" id="loading-lehigh">Fetching weather...</div>
+    </div>
+
+    <div class="weather-body" id="weather-atlanta">
+      <div class="weather-loading" id="loading-atlanta">Fetching weather...</div>
+    </div>
+  </div>
+
+  <!-- ── SOCIAL LINKS ── -->
+  <div class="card socials-card">
+    <div class="card-title">Quick Links — Your Socials</div>
+    <div class="social-grid">
+      <a class="social-btn youtube" href="https://youtube.com" target="_blank">
+        <span class="icon">
+          <!-- YouTube -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="38" height="38">
+            <rect width="48" height="48" rx="12" fill="#FF0000"/>
+            <path d="M38.5 16.5s-.4-2.6-1.6-3.7c-1.5-1.6-3.2-1.6-4-1.7C28.4 11 24 11 24 11s-4.4 0-8.9.1c-.8.1-2.5.1-4 1.7-1.2 1.1-1.6 3.7-1.6 3.7S9 19.4 9 22.3v2.7c0 2.9.5 5.8.5 5.8s.4 2.6 1.6 3.7c1.5 1.6 3.5 1.5 4.4 1.7C18 36.4 24 36.5 24 36.5s4.4 0 8.9-.1c.8-.1 2.5-.1 4-1.7 1.2-1.1 1.6-3.7 1.6-3.7s.5-2.9.5-5.8v-2.7c0-2.9-.5-5.8-.5-5.8zm-14.2 11.8l-.1-10.1 10.8 5.1-10.7 5z" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="social-label">YouTube</span>
+      </a>
+      <a class="social-btn tiktok" href="https://tiktok.com" target="_blank">
+        <span class="icon">
+          <!-- TikTok -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="38" height="38">
+            <rect width="48" height="48" rx="12" fill="#010101"/>
+            <path d="M34 14.2a8.1 8.1 0 0 1-5-4.2h-4.4v21c0 2.1-1.7 3.8-3.8 3.8a3.8 3.8 0 0 1-3.8-3.8 3.8 3.8 0 0 1 3.8-3.8c.4 0 .7.1 1 .2v-4.5a8.2 8.2 0 0 0-1-.1 8.2 8.2 0 0 0-8.2 8.2A8.2 8.2 0 0 0 20.8 40a8.2 8.2 0 0 0 8.2-8.2V22a13.4 13.4 0 0 0 7.8 2.5v-4.4a8.1 8.1 0 0 1-2.8-.4v-5.5z" fill="#fff"/>
+            <path d="M34 14.2a8.1 8.1 0 0 0 2.8.4v-4.4a8.1 8.1 0 0 1-2.8-.4v4.4z" fill="#69C9D0"/>
+            <path d="M36.8 10.2A8.1 8.1 0 0 1 34 14.2V10h2.8v.2z" fill="#EE1D52"/>
+          </svg>
+        </span>
+        <span class="social-label">TikTok</span>
+      </a>
+      <a class="social-btn twitter" href="https://x.com" target="_blank">
+        <span class="icon">
+          <!-- X / Twitter -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="38" height="38">
+            <rect width="48" height="48" rx="12" fill="#000"/>
+            <path d="M26.37 21.9L34.76 12h-2a.75.75 0 0 0-.56.25l-7.13 8.05L19.4 12H12l8.8 12.8L12 36h2a.75.75 0 0 0 .57-.26l7.65-8.63 6.38 8.89H36L26.37 21.9zm-2.3 2.6-.88-1.27-7-10.13h3l5.67 8.18.88 1.27 7.35 10.62h-3l-6.02-8.67z" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="social-label">Twitter / X</span>
+      </a>
+      <a class="social-btn instagram" href="https://instagram.com" target="_blank">
+        <span class="icon">
+          <!-- Instagram -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="38" height="38">
+            <defs>
+              <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
+                <stop offset="0%" stop-color="#fdf497"/>
+                <stop offset="5%" stop-color="#fdf497"/>
+                <stop offset="45%" stop-color="#fd5949"/>
+                <stop offset="60%" stop-color="#d6249f"/>
+                <stop offset="90%" stop-color="#285AEB"/>
+              </radialGradient>
+            </defs>
+            <rect width="48" height="48" rx="12" fill="url(#ig-grad)"/>
+            <rect x="13" y="13" width="22" height="22" rx="6" fill="none" stroke="#fff" stroke-width="2.5"/>
+            <circle cx="24" cy="24" r="5.5" fill="none" stroke="#fff" stroke-width="2.5"/>
+            <circle cx="31.5" cy="16.5" r="1.5" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="social-label">Instagram</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── DAILY CONTENT PLAN ── -->
+  <div class="card content-card">
+    <div class="card-title">Today's Content Plan</div>
+    <div id="day-badge" class="day-badge"></div>
+    <div id="content-focus" class="content-focus"></div>
+    <div id="content-subtitle" class="content-subtitle"></div>
+    <ul class="tasks-list" id="tasks-list"></ul>
+    <button class="reset-btn" onclick="resetTasks()">↺ Reset Checklist</button>
+  </div>
+
+  <!-- ── STREAM TIME CUES ── -->
+  <div class="card cues-card">
+    <div class="card-title">Stream Time Cues</div>
+    <!-- Calendar strip -->
+    <div class="cue-cal-strip" id="cue-cal-strip"></div>
+    <!-- Live status bar -->
+    <div class="cue-live-bar" id="cue-live-bar">
+      <div class="live-pulse"></div>
+      <span id="cue-live-msg">Stream is live — segment active</span>
+    </div>
+    <!-- Mode toggle (only shown on stream days) -->
+    <div class="cue-mode-toggle" id="cue-mode-toggle">
+      <button class="cue-mode-btn active" onclick="setCueMode('gaming', this)">🎮 Gaming · 3hr 20min</button>
+      <button class="cue-mode-btn" onclick="setCueMode('nogame', this)">🎙️ No-Game · 1hr 50min</button>
+    </div>
+    <div class="cue-timeline" id="cue-timeline"></div>
+  </div>
+
+  <!-- ── STREAM ANALYTICS ── -->
+  <div class="card analytics-card">
+    <div class="card-title">Last Stream Analytics</div>
+
+    <div class="analytics-top">
+      <div class="analytics-source">
+        Data from <a href="https://streamcharts.com" target="_blank">streamcharts.com</a> — paste your stats below or ask the coach
+      </div>
+      <button class="reset-btn" onclick="resetAnalytics()" style="margin-top:0">↺ Reset Stats</button>
+    </div>
+
+    <!-- Editable stat grid -->
+    <div class="stat-grid" id="stat-grid">
+      <div class="stat-box">
+        <div class="stat-icon">👁️</div>
+        <div class="stat-value" style="color:var(--cyan)" id="stat-avgviewers">—</div>
+        <div class="stat-label">Avg Viewers</div>
+        <div class="stat-change neutral" id="stat-avgviewers-chg"></div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon">📈</div>
+        <div class="stat-value" style="color:var(--purple)" id="stat-peakviewers">—</div>
+        <div class="stat-label">Peak Viewers</div>
+        <div class="stat-change neutral" id="stat-peakviewers-chg"></div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-value" style="color:var(--yellow)" id="stat-duration">—</div>
+        <div class="stat-label">Duration</div>
+        <div class="stat-change neutral" id="stat-duration-chg"></div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon">🔔</div>
+        <div class="stat-value" style="color:var(--green)" id="stat-followers">—</div>
+        <div class="stat-label">New Follows</div>
+        <div class="stat-change neutral" id="stat-followers-chg"></div>
+      </div>
+    </div>
+
+    <!-- Viewer timeline + game breakdown -->
+    <div class="analytics-row">
+      <div class="analytics-panel">
+        <div class="analytics-panel-title">Viewer Peaks</div>
+        <div id="peak-bars">
+          <div style="font-size:12px;color:var(--muted)">Add stats via the coach below</div>
+        </div>
+      </div>
+      <div class="analytics-panel">
+        <div class="analytics-panel-title">By Segment</div>
+        <div id="seg-breakdown">
+          <div style="font-size:12px;color:var(--muted)">Segment data will appear here</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Coach -->
+    <div class="coach-section">
+      <div class="coach-header">
+        <div class="coach-avatar">🤖</div>
+        <div>
+          <div class="coach-title">Stream Coach</div>
+          <div class="coach-sub">Paste your StreamCharts stats — get advice for your next stream</div>
+        </div>
+      </div>
+      <div class="coach-quick-btns">
+        <button class="coach-quick" onclick="quickAsk('How can I grow my average viewership?')">Grow avg viewers</button>
+        <button class="coach-quick" onclick="quickAsk('What segment should I improve next stream?')">Best segment tips</button>
+        <button class="coach-quick" onclick="quickAsk('How do I retain viewers longer?')">Viewer retention</button>
+        <button class="coach-quick" onclick="quickAsk('Give me tips to get more followers per stream')">More followers</button>
+        <button class="coach-quick" onclick="quickAsk('What time should I go live for max viewers?')">Best stream time</button>
+      </div>
+      <div class="coach-msgs" id="coach-msgs">
+        <div class="coach-msg bot">Hey Nytrsa! 👋 I'm your Stream Coach. Paste your StreamCharts stats or ask me anything about improving your next stream. You can also use the quick buttons above to get started.</div>
+      </div>
+      <div class="coach-input-row" style="margin-top:10px">
+        <input class="coach-input" id="coach-input" placeholder="Ask about your stream stats or paste StreamCharts data..." onkeydown="if(event.key==='Enter')sendCoach()" />
+        <button class="coach-send-btn" id="coach-send-btn" onclick="sendCoach()">Ask ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TWITTER SIDEBAR ── -->
+  <div class="card twitter-sidebar">
+    <div class="card-title">
+      <span class="live-dot"></span> Twitter / X News
+    </div>
+
+    <div class="news-source-select">
+      <button class="news-tab active" onclick="loadFeed('TMZ', this)">TMZ</button>
+      <button class="news-tab" onclick="loadFeed('BBCBreaking', this)">BBC News</button>
+      <button class="news-tab" onclick="loadFeed('TheShadeRoom', this)">Shade Room</button>
+      <button class="news-tab" onclick="loadFeed('Complex', this)">Complex</button>
+    </div>
+
+    <div class="twitter-feed-container" id="twitter-container">
+      <div class="feed-loading" id="feed-loading">
+        <div class="spinner"></div>
+        <span>Loading feed...</span>
+      </div>
+      <!-- Twitter timeline injected here -->
+      <div id="twitter-widget-wrap" style="height:100%; overflow-y:auto;"></div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
+<script>
+
+/* ── LIVE CLOCK ────────────────────────────────── */
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('live-time').textContent = `${h}:${m}`;
+
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('live-date').textContent =
+    `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+  const hr = now.getHours();
+  let msg = hr < 12 ? 'Good morning ☀️' : hr < 17 ? 'Good afternoon 🌤' : hr < 21 ? 'Good evening 🌆' : 'Night grind 🌙';
+  document.getElementById('greeting-msg').textContent = msg;
+}
+updateClock();
+setInterval(updateClock, 60000);
+
+
+/* ── WEATHER ───────────────────────────────────── */
+const weatherCodeMap = {
+  113: ['☀️','Sunny'], 116: ['⛅','Partly Cloudy'], 119: ['☁️','Cloudy'],
+  122: ['🌫️','Overcast'], 143: ['🌫️','Mist'], 176: ['🌦️','Patchy Rain'],
+  185: ['🌧️','Patchy Sleet'], 200: ['⛈️','Thundery Outbreaks'], 227: ['🌨️','Blowing Snow'],
+  230: ['❄️','Blizzard'], 248: ['🌫️','Fog'], 260: ['🌫️','Freezing Fog'],
+  263: ['🌦️','Light Drizzle'], 266: ['🌧️','Light Drizzle'], 281: ['🌧️','Freezing Drizzle'],
+  284: ['🌧️','Heavy Drizzle'], 293: ['🌦️','Light Rain'], 296: ['🌧️','Light Rain'],
+  299: ['🌧️','Mod Rain'], 302: ['🌧️','Mod Rain'], 305: ['🌧️','Heavy Rain'],
+  308: ['🌧️','Heavy Rain'], 311: ['🌨️','Light Sleet'], 314: ['🌨️','Mod Sleet'],
+  317: ['🌨️','Light Sleet'], 320: ['🌨️','Mod Snow'], 323: ['❄️','Light Snow'],
+  326: ['❄️','Light Snow'], 329: ['❄️','Mod Snow'], 332: ['❄️','Mod Snow'],
+  335: ['❄️','Heavy Snow'], 338: ['❄️','Heavy Snow'], 350: ['🌨️','Ice Pellets'],
+  353: ['🌦️','Light Shower'], 356: ['🌧️','Mod Shower'], 359: ['🌧️','Heavy Shower'],
+  362: ['🌨️','Sleet Shower'], 365: ['🌨️','Sleet Shower'], 368: ['❄️','Snow Shower'],
+  371: ['❄️','Heavy Snow'], 374: ['🌨️','Ice Pellets'], 377: ['🌨️','Ice Pellets'],
+  386: ['⛈️','Thunder'], 389: ['⛈️','Heavy Thunder'], 392: ['⛈️','Snow Thunder'], 395: ['⛈️','Heavy Snow'],
+};
+
+function getWeatherIcon(code) {
+  return weatherCodeMap[code] || ['🌡️','Unknown'];
+}
+
+async function fetchWeather(city, containerId) {
+  const container = document.getElementById(containerId);
+  try {
+    const resp = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`);
+    if (!resp.ok) throw new Error('fetch failed');
+    const data = await resp.json();
+    const curr = data.current_condition[0];
+    const code = parseInt(curr.weatherCode);
+    const [icon, desc] = getWeatherIcon(code);
+    const tempF = curr.temp_F;
+    const humidity = curr.humidity;
+    const windMph = curr.windspeedMiles;
+    const feelsF = curr.FeelsLikeF;
+    const nearest = data.nearest_area[0];
+    const areaName = nearest.areaName[0].value + ', ' + nearest.region[0].value;
+
+    container.innerHTML = `
+      <div class="weather-icon-wrap">${icon}</div>
+      <div class="weather-main">
+        <div class="weather-temp">${tempF}°F</div>
+        <div class="weather-desc">${desc}</div>
+        <div class="weather-city-name">${areaName}</div>
+        <div class="weather-stats">
+          <div class="wstat"><strong>💧 ${humidity}%</strong>Humidity</div>
+          <div class="wstat"><strong>💨 ${windMph} mph</strong>Wind</div>
+          <div class="wstat"><strong>🌡️ ${feelsF}°F</strong>Feels Like</div>
+        </div>
+      </div>`;
+  } catch(e) {
+    container.innerHTML = `<div class="weather-error">⚠️ Couldn't load weather. Check your connection.</div>`;
+  }
+}
+
+fetchWeather('Lehigh Acres, FL', 'weather-lehigh');
+fetchWeather('Atlanta, GA', 'weather-atlanta');
+
+let currentCity = 'lehigh';
+function switchCity(city) {
+  currentCity = city;
+  document.querySelectorAll('.city-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.weather-body').forEach(b => b.classList.remove('active'));
+  document.getElementById('weather-' + city).classList.add('active');
+}
+
+
+/* ── DAILY CONTENT PLAN ────────────────────────── */
+const dayThemes = [
+  // Sunday
+  {
+    badge: '☀️ Sunday', focus: 'Plan & Reflect', sub: 'Set yourself up for a winning week of content.',
+    tasks: [
+      { text: 'Review last week\'s performance — what hit different?', platform: 'all' },
+      { text: 'Brainstorm & write down 5 video ideas for this week', platform: 'all' },
+      { text: 'Film a "Week in My Life" or Sunday reset vlog clip', platform: 'yt' },
+      { text: 'Post a behind-the-scenes or "prep day" TikTok', platform: 'tt' },
+      { text: 'Pin a tweet asking your audience what content they want next', platform: 'tw' },
+    ]
+  },
+  // Monday
+  {
+    badge: '🔥 Monday', focus: 'Motivation Monday', sub: 'Start the week loud — give people something to talk about.',
+    tasks: [
+      { text: 'Post a hot take or strong opinion on something trending', platform: 'tw' },
+      { text: 'Film a "Monday Motivation" vlog or get-ready-with-me', platform: 'tt' },
+      { text: 'Start filming your YouTube video for the week', platform: 'yt' },
+      { text: 'Go Live for 15–20 mins — connect with your community', platform: 'ig' },
+      { text: 'Engage: Reply to 10 comments on your last post', platform: 'all' },
+    ]
+  },
+  // Tuesday
+  {
+    badge: '🎙️ Tuesday', focus: 'Takes Tuesday', sub: 'Your opinions matter — say something real today.',
+    tasks: [
+      { text: 'Film a reaction or opinion video on something trending right now', platform: 'yt' },
+      { text: 'Post a "my honest take on…" TikTok (under 60s)', platform: 'tt' },
+      { text: 'Tweet a thread with your take on a current topic', platform: 'tw' },
+      { text: 'Repost your TikTok to Instagram Reels', platform: 'ig' },
+      { text: 'Check Twitter trends and bookmark ideas for future reactions', platform: 'tw' },
+    ]
+  },
+  // Wednesday
+  {
+    badge: '🎥 Wednesday', focus: 'Vlog Wednesday', sub: 'Bring them into your world — authentic vibes only.',
+    tasks: [
+      { text: 'Film a day-in-the-life or "what I\'m up to" vlog', platform: 'yt' },
+      { text: 'Post 2–3 TikTok clips from your day (behind-the-scenes moments)', platform: 'tt' },
+      { text: 'Share your day on Instagram Stories (10+ frames)', platform: 'ig' },
+      { text: 'Edit and upload this week\'s main YouTube video if ready', platform: 'yt' },
+      { text: 'Tweet something funny or relatable from your day', platform: 'tw' },
+    ]
+  },
+  // Thursday
+  {
+    badge: '🔁 Thursday', focus: 'Throwback & React', sub: 'Nostalgia content + reactions = big engagement.',
+    tasks: [
+      { text: 'React to a viral video, old trend, or throwback clip', platform: 'yt' },
+      { text: 'Post a "POV: reacting to…" style TikTok', platform: 'tt' },
+      { text: 'Share a throwback photo or moment to Instagram', platform: 'ig' },
+      { text: 'Engage in a trending Twitter conversation or reply to a viral tweet', platform: 'tw' },
+      { text: 'Plan tomorrow\'s content — write out your script or talking points', platform: 'all' },
+    ]
+  },
+  // Friday
+  {
+    badge: '🌟 Friday', focus: 'Feature Friday', sub: 'Go deeper — your audience wants more of YOU.',
+    tasks: [
+      { text: 'Post your biggest / most polished video of the week on YouTube', platform: 'yt' },
+      { text: 'Film a "get ready with me for the weekend" TikTok', platform: 'tt' },
+      { text: 'Post a carousel or reel highlighting your week', platform: 'ig' },
+      { text: 'Drop a Friday hype tweet — celebrate your content wins', platform: 'tw' },
+      { text: 'Respond to DMs and comments to boost algorithm', platform: 'all' },
+    ]
+  },
+  // Saturday
+  {
+    badge: '💜 Saturday', focus: 'Community Day', sub: 'It\'s all about your people — give them love.',
+    tasks: [
+      { text: 'Go Live on TikTok or Instagram — chat with your followers', platform: 'tt' },
+      { text: 'Post a Q&A or "ask me anything" on Instagram Stories', platform: 'ig' },
+      { text: 'Retweet + reply to fans who tagged you this week', platform: 'tw' },
+      { text: 'Watch and comment on 5 other creators in your niche', platform: 'all' },
+      { text: 'Start filming content for next week — get ahead!', platform: 'yt' },
+    ]
+  },
+];
+
+const platformLabels = { yt: 'YouTube', tt: 'TikTok', tw: 'Twitter', ig: 'Instagram', all: 'All Platforms' };
+const platformClasses = { yt: 'platform-yt', tt: 'platform-tt', tw: 'platform-tw', ig: 'platform-ig', all: 'platform-all' };
+
+const dayOfWeek = new Date().getDay();
+const todayPlan = dayThemes[dayOfWeek];
+const STORAGE_KEY = 'creator_hq_tasks_' + new Date().toDateString();
+
+function getCheckedState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function saveCheckedState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+}
+
+function renderTasks() {
+  const checked = getCheckedState();
+  document.getElementById('day-badge').textContent = todayPlan.badge;
+  document.getElementById('content-focus').textContent = todayPlan.focus;
+  document.getElementById('content-subtitle').textContent = todayPlan.sub;
+  const list = document.getElementById('tasks-list');
+  list.innerHTML = '';
+  todayPlan.tasks.forEach((task, i) => {
+    const done = !!checked[i];
+    const li = document.createElement('li');
+    li.className = 'task-item' + (done ? ' done' : '');
+    li.onclick = () => toggleTask(i);
+    li.innerHTML = `
+      <div class="task-check">${done ? '✓' : ''}</div>
+      <span class="task-text">${task.text}</span>
+      <span class="task-platform ${platformClasses[task.platform]}">${platformLabels[task.platform]}</span>`;
+    list.appendChild(li);
+  });
+}
+
+function toggleTask(i) {
+  const state = getCheckedState();
+  state[i] = !state[i];
+  saveCheckedState(state);
+  renderTasks();
+}
+
+function resetTasks() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  renderTasks();
+}
+
+renderTasks();
+
+
+/* ── STREAM TIME CUES ─────────────────────────── */
+const CUE_DATA = {
+  gaming: [
+    { name:'Intro + Reactions',  dur:30,  color:'#9333ea', startNote:'Go live — open with energy, react to clips right away',          alert:'⏰ 5 min left — wrap reactions, hype up Roll Call' },
+    { name:'Roll Call',          dur:10,  color:'#22c55e', startNote:'Shout out everyone in chat, acknowledge new followers',           alert:'⏰ 2 min left — finish shoutouts, tease Topic of the Night' },
+    { name:'Topic of the Night', dur:20,  color:'#facc15', startNote:'Drop the topic, give your take first then open it to chat',       alert:'⏰ 5 min left — wrap debate, give your closing take' },
+    { name:'Featured Segment',   dur:30,  color:'#f43f5e', startNote:'Announce the segment, hype chat up before diving in',             alert:'⏰ 5 min left — close segment, tease the gaming' },
+    { name:'Main Gaming',        dur:100, color:'#22d3ee', startNote:'Boot up the game, invite viewers into the lobby',                 alert:'⏰ 10 min left — finish current match, start goodbyes' },
+    { name:'Wrap-Up + Outro',    dur:10,  color:'#64748b', startNote:'Recap the night, shoutouts, plug socials with !Socials',          alert:'⏰ Stream end — hit end screen, go offline' },
+  ],
+  nogame: [
+    { name:'Intro + Reactions',  dur:30,  color:'#9333ea', startNote:'Go live — open with energy, react to clips right away',          alert:'⏰ 5 min left — wrap reactions, hype up Roll Call' },
+    { name:'Roll Call',          dur:10,  color:'#22c55e', startNote:'Shout out everyone in chat, acknowledge new followers',           alert:'⏰ 2 min left — finish shoutouts, tease Topic of the Night' },
+    { name:'Topic of the Night', dur:20,  color:'#facc15', startNote:'Drop the topic, give your take first then open it to chat',       alert:'⏰ 5 min left — wrap debate, give your closing take' },
+    { name:'Main Segment #1',    dur:30,  color:'#f43f5e', startNote:'Announce the segment, get chat hyped and participating',          alert:'⏰ 5 min left — wind down, tease Segment #2' },
+    { name:'Main Segment #2',    dur:20,  color:'#ec4899', startNote:'Jump straight in — keep energy up from Segment #1',              alert:'⏰ 5 min left — start closing out, hype the wrap-up' },
+    { name:'Wrap-Up + Outro',    dur:10,  color:'#64748b', startNote:'Recap the night, shoutouts, plug socials with !Socials',          alert:'⏰ Stream end — hit end screen, go offline' },
+  ]
+};
+
+const STREAM_DAY_INFO = { 4: 'nogame', 5: 'gaming', 6: 'gaming' };
+const STREAM_START = 19 * 60; // 7pm in minutes
+let activeCueMode = 'gaming';
+let selectedCueDate = null;
+
+function cueClockTime(startMin) {
+  const total = STREAM_START + startMin;
+  const h = Math.floor(total / 60) % 24;
+  const m = total % 60;
+  const hd = h > 12 ? h - 12 : h;
+  return hd + ':' + String(m).padStart(2,'0') + (h < 12 ? 'am' : 'pm');
+}
+
+function fmtCueDur(min) {
+  const h = Math.floor(min/60), m = min%60;
+  return h ? h+'hr'+(m?' '+m+'min':'') : m+'min';
+}
+
+function getUpcomingStreamDates() {
+  const dates = [];
+  const today = new Date();
+  for (let i = 0; i < 28 && dates.length < 4; i++) {
+    const d = new Date(today); d.setDate(today.getDate() + i);
+    if (STREAM_DAY_INFO[d.getDay()] !== undefined) dates.push(new Date(d));
+  }
+  return dates;
+}
+
+function renderCalStrip() {
+  const dates = getUpcomingStreamDates();
+  const today = new Date();
+  const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('cue-cal-strip').innerHTML = dates.map((d, i) => {
+    const type = STREAM_DAY_INFO[d.getDay()];
+    const isToday = d.toDateString() === today.toDateString();
+    const isSelected = selectedCueDate && d.toDateString() === selectedCueDate.toDateString();
+    let cls = 'cue-cal-day';
+    if (isToday) cls += ' cal-today';
+    if (isSelected) cls += ' cal-selected';
+    return `<div class="${cls}" onclick="selectCueDate(${i})">
+      <div class="cue-cal-dayname">${DAY_NAMES[d.getDay()]}</div>
+      <div class="cue-cal-date">${d.getDate()}</div>
+      <div class="cue-cal-badge ${type === 'gaming' ? 'badge-gaming' : 'badge-nogame'}">${MONTHS[d.getMonth()]}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectCueDate(index) {
+  const dates = getUpcomingStreamDates();
+  selectedCueDate = dates[index];
+  activeCueMode = STREAM_DAY_INFO[selectedCueDate.getDay()];
+  document.querySelectorAll('.cue-mode-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === (activeCueMode === 'gaming' ? 0 : 1));
+  });
+  renderCalStrip();
+  renderCues(activeCueMode);
+}
+
+function getActiveSegInfo(segs) {
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const endMin = STREAM_START + segs.reduce((s,x) => s + x.dur, 0);
+  if (nowMin < STREAM_START || nowMin >= endMin) return { idx: -1, warning: false };
+  let cursor = 0;
+  for (let i = 0; i < segs.length; i++) {
+    const segStart = STREAM_START + cursor;
+    const segEnd = segStart + segs[i].dur;
+    if (nowMin >= segStart && nowMin < segEnd) {
+      const warnMins = segs[i].dur >= 60 ? 10 : segs[i].dur <= 10 ? 2 : 5;
+      return { idx: i, warning: (segEnd - nowMin) <= warnMins };
+    }
+    cursor += segs[i].dur;
+  }
+  return { idx: -1, warning: false };
+}
+
+function renderCues(mode) {
+  const segs = CUE_DATA[mode];
+  const total = segs.reduce((s,x) => s + x.dur, 0);
+  const today = new Date();
+  const isTodaySelected = selectedCueDate && selectedCueDate.toDateString() === today.toDateString();
+  const { idx: activeIdx, warning: isWarning } = isTodaySelected ? getActiveSegInfo(segs) : { idx: -1, warning: false };
+  const isLive = activeIdx >= 0;
+
+  // Live status bar
+  const liveBar = document.getElementById('cue-live-bar');
+  const liveMsg = document.getElementById('cue-live-msg');
+  if (isLive) {
+    liveBar.classList.add('visible');
+    liveMsg.textContent = `🔴 LIVE — ${segs[activeIdx].name}${isWarning ? ' (ending soon!)' : ' in progress'}`;
+  } else {
+    liveBar.classList.remove('visible');
+  }
+
+  let cursor = 0;
+  let html = '';
+  segs.forEach((s, i) => {
+    const start = cursor; cursor += s.dur;
+    const isPast   = isTodaySelected && i < activeIdx;
+    const isActive = isTodaySelected && i === activeIdx && !isWarning;
+    const isWarn   = isTodaySelected && i === activeIdx && isWarning;
+    let rowCls = 'cue-row';
+    if (isPast) rowCls += ' is-past';
+    else if (isWarn) rowCls += ' is-warning';
+    else if (isActive) rowCls += ' is-active';
+    const isLast = i === segs.length - 1;
+    html += `<div class="${rowCls}" id="cue-seg-${i}">
+      <div class="cue-left">
+        <div class="cue-clock">${cueClockTime(start)}</div>
+        <div class="cue-dot" style="border-color:${s.color}"></div>
+        ${!isLast ? `<div class="cue-connector" style="background:${s.color}"></div>` : ''}
+      </div>
+      <div class="cue-right">
+        <div class="cue-card-inner">
+          <div class="cue-top">
+            <span class="cue-seg-name" style="color:${s.color}">${s.name}</span>
+            <span class="cue-dur-badge" style="background:${s.color}22;color:${s.color}">${fmtCueDur(s.dur)}</span>
+          </div>
+          <div class="cue-start-note">${s.startNote}</div>
+          <div class="cue-alert" style="background:${s.color}18;color:${s.color};border:1px solid ${s.color}33">${s.alert}</div>
+        </div>
+      </div>
+    </div>`;
+  });
+  html += `<div class="cue-end-row">
+    <span class="cue-end-label">Stream ends</span>
+    <span class="cue-end-time">${cueClockTime(total)} EST</span>
+  </div>`;
+  document.getElementById('cue-timeline').innerHTML = html;
+
+  if (isLive) {
+    setTimeout(() => {
+      const el = document.getElementById('cue-seg-' + activeIdx);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  }
+}
+
+function setCueMode(mode, btn) {
+  activeCueMode = mode;
+  document.querySelectorAll('.cue-mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCues(mode);
+}
+
+function initCues() {
+  const dates = getUpcomingStreamDates();
+  const today = new Date();
+  const todayIsStream = STREAM_DAY_INFO[today.getDay()] !== undefined;
+  selectedCueDate = todayIsStream ? today : (dates[0] || null);
+  if (selectedCueDate) {
+    activeCueMode = STREAM_DAY_INFO[selectedCueDate.getDay()] || 'gaming';
+    document.querySelectorAll('.cue-mode-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === (activeCueMode === 'gaming' ? 0 : 1));
+    });
+  }
+  renderCalStrip();
+  renderCues(activeCueMode);
+}
+
+initCues();
+setInterval(() => { renderCalStrip(); renderCues(activeCueMode); }, 30000);
+
+
+/* ── STREAM ANALYTICS + COACH ──────────────────── */
+let streamStats = {};
+let coachHistory = [];
+
+const COACH_SYSTEM = `You are a Twitch stream growth coach for a streamer named Nytrsa. He streams Thu/Fri/Sat at 7PM EST. His format: Intro+Reactions (30min) → Roll Call (10min) → Topic of the Night/current events debate (20min) → Featured Segment like Viewer Confessions, Hot Takes, Song Wars, Rate My Outfit, Challenges, Album Reactions, or Discord Interactive (30min) → Main Gaming WWE 2K26 with viewers (gaming nights, 100min) → Wrap-Up (10min). Thursday is a no-game talk show format (1hr 50min). Be direct, hype him up, give specific actionable advice. Keep responses under 130 words. Reference his actual stream format when relevant.`;
+
+function parseStatsFromText(text) {
+  const stats = {};
+  const avg  = text.match(/avg(?:erage)?\s*(?:viewers?|ccv)[:\s]+(\d[\d,.k]+)/i);
+  const peak = text.match(/peak\s*(?:viewers?)?[:\s]+(\d[\d,.k]+)/i);
+  const dur  = text.match(/(\d+(?:\.\d+)?)\s*(?:hr|hour|h)\s*(?:(\d+)\s*(?:min|m))?/i);
+  const foll = text.match(/(?:new\s*)?follow(?:ers?)?[:\s]+(\d[\d,.k]+)/i);
+  if (avg)  stats.avgViewers  = avg[1].replace(',','');
+  if (peak) stats.peakViewers = peak[1].replace(',','');
+  if (dur)  stats.duration    = dur[1]+'h'+(dur[2]?dur[2]+'m':'');
+  if (foll) stats.followers   = foll[1].replace(',','');
+  return stats;
+}
+
+function updateStatDisplay(stats) {
+  if (stats.avgViewers)  document.getElementById('stat-avgviewers').textContent  = stats.avgViewers;
+  if (stats.peakViewers) document.getElementById('stat-peakviewers').textContent = stats.peakViewers;
+  if (stats.duration)    document.getElementById('stat-duration').textContent    = stats.duration;
+  if (stats.followers)   document.getElementById('stat-followers').textContent   = '+'+stats.followers;
+
+  if (stats.peakViewers) {
+    const peak = parseInt(stats.peakViewers);
+    const avg  = parseInt(stats.avgViewers) || Math.round(peak * 0.6);
+    const segs    = ['Reactions','Roll Call','Topic','Segment','Gaming','Outro'];
+    const weights = [0.55, 0.70, 0.85, 0.95, 1.0, 0.65];
+    const colors  = ['#9333ea','#22c55e','#facc15','#f43f5e','#22d3ee','#64748b'];
+    document.getElementById('peak-bars').innerHTML = segs.map((s,i) => {
+      const val = Math.round(peak * weights[i]);
+      const pct = Math.round((val/peak)*100);
+      return `<div class="peak-bar-row">
+        <div class="peak-bar-label">${s}</div>
+        <div class="peak-bar-track"><div class="peak-bar-fill" style="width:${pct}%;background:${colors[i]}"></div></div>
+        <div class="peak-bar-val">${val}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('seg-breakdown').innerHTML = segs.map((s,i) => {
+      const val  = Math.round(peak * weights[i]);
+      const diff = val - Math.round(avg);
+      const cls  = diff >= 0 ? 'up' : 'down';
+      return `<div class="game-row">
+        <span class="game-name" style="color:${colors[i]}">${s}</span>
+        <span class="game-viewers">${val} <span class="${cls}" style="font-size:10px">${diff>=0?'+':''}${diff}</span></span>
+      </div>`;
+    }).join('');
+  }
+  streamStats = { ...streamStats, ...stats };
+}
+
+function resetAnalytics() {
+  ['stat-avgviewers','stat-peakviewers','stat-duration','stat-followers'].forEach(id => {
+    document.getElementById(id).textContent = '—';
+  });
+  document.getElementById('peak-bars').innerHTML     = '<div style="font-size:12px;color:var(--muted)">Add stats via the coach below</div>';
+  document.getElementById('seg-breakdown').innerHTML = '<div style="font-size:12px;color:var(--muted)">Segment data will appear here</div>';
+  streamStats = {};
+}
+
+function addCoachMsg(role, text) {
+  const msgs = document.getElementById('coach-msgs');
+  const div  = document.createElement('div');
+  div.className = 'coach-msg ' + role;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+async function sendCoach() {
+  const input = document.getElementById('coach-input');
+  const btn   = document.getElementById('coach-send-btn');
+  const text  = input.value.trim();
+  if (!text) return;
+
+  const parsed = parseStatsFromText(text);
+  if (Object.keys(parsed).length > 0) updateStatDisplay(parsed);
+
+  addCoachMsg('user', text);
+  coachHistory.push({ role:'user', content: text });
+  input.value = '';
+  btn.disabled = true;
+
+  const typing = addCoachMsg('typing', 'Coach is thinking...');
+
+  let statsCtx = '';
+  if (streamStats.avgViewers)  statsCtx += ` Avg viewers: ${streamStats.avgViewers}.`;
+  if (streamStats.peakViewers) statsCtx += ` Peak viewers: ${streamStats.peakViewers}.`;
+  if (streamStats.duration)    statsCtx += ` Duration: ${streamStats.duration}.`;
+  if (streamStats.followers)   statsCtx += ` New followers: ${streamStats.followers}.`;
+
+  const messages = [
+    ...(statsCtx ? [{ role:'user', content:'My latest stream stats:'+statsCtx }, { role:'assistant', content:'Got it — I have your stats loaded. What do you want to improve?' }] : []),
+    ...coachHistory
+  ];
+
+  try {
+    const res  = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system: COACH_SYSTEM, messages })
+    });
+    const data  = await res.json();
+    const reply = data.content?.[0]?.text || 'Something went wrong — try again!';
+    typing.remove();
+    addCoachMsg('bot', reply);
+    coachHistory.push({ role:'assistant', content: reply });
+  } catch(e) {
+    typing.remove();
+    addCoachMsg('bot', 'Network error — check your connection and try again.');
+  }
+  btn.disabled = false;
+  input.focus();
+}
+
+function quickAsk(q) {
+  document.getElementById('coach-input').value = q;
+  sendCoach();
+}
+
+
+let currentHandle = 'TMZ';
+
+function loadFeed(handle, btn) {
+  if (handle === currentHandle) return;
+  currentHandle = handle;
+  document.querySelectorAll('.news-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  injectTwitterWidget(handle);
+}
+
+function injectTwitterWidget(handle) {
+  const wrap = document.getElementById('twitter-widget-wrap');
+  const loading = document.getElementById('feed-loading');
+  loading.style.display = 'flex';
+  wrap.innerHTML = '';
+
+  // Remove old script if any
+  const oldScript = document.getElementById('twitter-wjs');
+  if (oldScript) oldScript.remove();
+
+  // Create the anchor tag Twitter widget uses
+  const anchor = document.createElement('a');
+  anchor.className = 'twitter-timeline';
+  anchor.setAttribute('data-theme', 'dark');
+  anchor.setAttribute('data-height', '800');
+  anchor.setAttribute('data-chrome', 'noheader nofooter noborders');
+  anchor.href = `https://twitter.com/${handle}`;
+  anchor.textContent = `Tweets by @${handle}`;
+  wrap.appendChild(anchor);
+
+  // Load Twitter widget script
+  const script = document.createElement('script');
+  script.id = 'twitter-wjs';
+  script.async = true;
+  script.src = 'https://platform.twitter.com/widgets.js';
+  script.charset = 'utf-8';
+  script.onload = () => {
+    if (window.twttr && window.twttr.widgets) {
+      window.twttr.widgets.load(wrap).then(() => {
+        loading.style.display = 'none';
+      });
+    }
+  };
+  document.body.appendChild(script);
+
+  // Fallback hide loading after timeout
+  setTimeout(() => { loading.style.display = 'none'; }, 4000);
+}
+
+// Init with TMZ on load
+window.addEventListener('load', () => {
+  injectTwitterWidget('TMZ');
+});
+
+// If twttr already loaded (reload case), re-render
+if (window.twttr) {
+  window.twttr.widgets.load();
+}
+
+</script>
+</body>
+</html>
